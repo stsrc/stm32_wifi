@@ -1,0 +1,75 @@
+# name of executable
+
+ELF=$(notdir $(CURDIR)).elf
+
+# Libroot path
+
+LIBROOT=/home/kgotfryd/programming/workspace/stm32cube/STM32CubeF1-1.8.0/Drivers/
+
+# Tools
+
+CC=arm-none-eabi-gcc
+LD=arm-none-eabi-gcc
+AR=arm-none-eabi-ar
+AS=arm-none-eabi-as
+
+# Library paths
+
+INCLUDE=$(LIBROOT)/CMSIS/Device/ST/STM32F1xx/Include/
+CORE=$(LIBROOT)/CMSIS/Device/ST/STM32F1xx/Source/Templates/
+INCLUDE_CORE=$(LIBROOT)/CMSIS/Core/Include/
+HAL=$(LIBROOT)/STM32F1xx_HAL_Driver/Inc/
+HAL_SRC=$(LIBROOT)/STM32F1xx_HAL_Driver/Src
+# Search path for core files
+
+vpath %.c $(CORE)
+vpath %.s $(CORE)/gcc
+vpath %.c $(HAL_SRC)
+
+#  Processor specific
+#
+LDSCRIPT=$(CORE)/gcc/linker/STM32F100XB_FLASH.ld
+STARTUP=startup_stm32f100xb.o system_stm32f1xx.o
+PTYPE=STM32F10X_MD_VL
+DEVICE=STM32F100xB
+
+# HAL files
+HAL_COMPILE= stm32f1xx_hal_gpio.o stm32f1xx_hal_cortex.o stm32f1xx_hal_uart.o stm32f1xx_hal_rcc.o stm32f1xx_hal.o stm32f1xx_hal_dma.o
+
+# Compilation Flags
+LDFLAGS+= -T$(LDSCRIPT) -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
+LDFLAGS+= -specs=nosys.specs
+LDFLAGS+= -Wall -Wl,-gc-sections,-u,main
+CFLAGS+= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
+CFLAGS+= -Os -g3 -Wall -std=gnu99
+CFLAGS+= -fdata-sections
+CFLAGS+= -I$(CORE) -I$(INCLUDE) -I$(INCLUDE_CORE) -I$(HAL) -I.
+CFLAGS+= -D$(PTYPE) -D$(DEVICE)
+# Build executable
+
+$(ELF) : $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $(OBJS)  $(LDLIBS) -lm
+
+# compile and generate dependency info
+
+%.o: %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -MM $(CFLAGS) $< > $*.d
+
+%.o: %.s
+	$(CC) -c $(CFLAGS) $< -o $@
+
+clean:
+	rm -f $(OBJS) $(OBJS:.o=.d) $(ELF) startup_stm32f* $(CLEANOTHER)
+
+debug: $(ELF)
+	armeb-unknown-eabi-gdb $(ELF)
+
+
+# pull in dependencies
+
+-include $(OBJS:.o=.d)
+
+
+
+
