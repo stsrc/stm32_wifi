@@ -3,3 +3,4 @@
 *.elf
 *cscope*
 src/secret-password.h
+*.swp
