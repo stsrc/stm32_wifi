@@ -4,6 +4,7 @@
 #include "stupid_delay.h"
 #include "UART.h"
 #include "simple_buffer.h"
+#include <stdio.h>
 
 #define LED_port GPIOC
 #define LED_Blue (1 << 8)
@@ -43,21 +44,26 @@ static void configure_clock() {
 extern struct simple_buffer UART2_transmit_buffer;
 
 int main(void){
+	char buffer[128];
 	configure_clock();
 	init_blue_led();
 	delay_init();
 	UART_1_init();
-/*	esp8266_Init();
-	uint8_t day, month, year, hour, minute, second;
-	esp8266_GetDate(&day, &month, &year, &hour, &minute, &second);*/
+	UART_2_init();
+	esp8266_Init();
+	uint16_t year;
+	uint8_t day, month, hour, minute, second;
+	esp8266_GetDate(&day, &month, &year, &hour, &minute, &second);
 	while(1){
 		GPIO_setBit(LED_port, LED_Blue);
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
-		const char *testString = "TEST STRING\r\n\0";
-		buffer_set_text(&UART1_transmit_buffer, testString, strlen(testString));
-		UART_1_transmit();
+//		sprintf(buffer, "%d/%d/%d\r\n", (int) day, (int) month, (int) year);
+//		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
+//		sprintf(buffer, "%d:%d:%d\r\n", (int) hour, (int) minute, (int) second);
+//		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
+//		UART_1_transmit();
 	}
 	return 0;
 }

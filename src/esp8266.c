@@ -5,11 +5,19 @@
 #define ESP8266_RST_PORT	GPIOA
 #define ESP8266_RST_PIN		GPIO_PIN_4
 
-#define ESP8266_FW_PORT		GPIOA
-#define ESP8266_FW_PIN		GPIO_PIN_8
+#define ESP8266_CH_PD_PORT		GPIOA
+#define ESP8266_CH_PD_PIN		GPIO_PIN_5
+
+#define ESP8266_GPIO0_PORT	GPIOA
+#define ESP8266_GPIO0_PIN	GPIO_PIN_6
+
+#define ESP8266_GPIO2_PORT	GPIOA
+#define ESP8266_GPIO2_PIN	GPIO_PIN_7
 
 #define AT_RESET_CMD		"AT+RST\r\n\0"
+#define AT_GMR			"AT+GMR\r\n\0"
 #define AT_CWMODE_1		"AT+CWMODE=1\r\n\0"
+#define AT_CWLAP		"AT+CWLAP\r\n\0"
 #define AT_PING_GOOGLE		"AT+PING=\"www.google.com\"\r\n\0"
 #define AT_CIPMODE_0		"AT+CIPMODE=0\r\n\0"
 #define AT_CIPMUX_1		"AT+CIPMUX=1\r\n\0"
@@ -119,11 +127,15 @@ static void esp8266_InitPins()
 	init.Mode = GPIO_MODE_OUTPUT_PP;
 	init.Pull = GPIO_PULLUP;
 	init.Speed = GPIO_SPEED_FREQ_HIGH;
-	init.Pin = ESP8266_RST_PIN | ESP8266_FW_PIN;
+	init.Pin = ESP8266_RST_PIN | ESP8266_CH_PD_PIN | ESP8266_GPIO0_PIN | ESP8266_GPIO2_PIN;
+
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	HAL_GPIO_Init(ESP8266_RST_PORT, &init);
-	HAL_GPIO_WritePin(ESP8266_FW_PORT, ESP8266_FW_PIN, GPIO_PIN_SET);
+
+	HAL_GPIO_WritePin(ESP8266_CH_PD_PORT, ESP8266_CH_PD_PIN, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(ESP8266_RST_PORT, ESP8266_RST_PIN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(ESP8266_GPIO2_PORT, ESP8266_GPIO2_PIN, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(ESP8266_GPIO0_PORT, ESP8266_GPIO0_PIN, GPIO_PIN_SET);
 }
 
 
@@ -272,6 +284,10 @@ int8_t esp8266_Init()
 	delay_ms(15000);
 	esp8266_Send(RST_CMD, strlen(RST_CMD));
 	delay_ms(15000);
+	esp8266_Send(AT_GMR, strlen(AT_GMR));
+	delay_ms(5000);
+	esp8266_Send(AT_CWLAP, strlen(AT_CWLAP));
+	delay_ms(5000);
 	buffer_Reset(&UART2_receive_buffer);
 	ret = esp8266_ConnectToWiFi();
 	if (ret)

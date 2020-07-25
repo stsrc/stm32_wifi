@@ -38,14 +38,17 @@ void USART2_IRQHandler(void)
 		data = (uint8_t)USART2->DR;
 		esp8266_CheckInput(data);
 		buffer_set_byte(&UART2_receive_buffer, data);
+		buffer_set_byte(&UART1_transmit_buffer, data);
+		UART_1_transmit();
 	}
 
 	if (USART2->SR & (USART_SR_TC | USART_SR_TXE)) {
 		ret = buffer_get_byte(&UART2_transmit_buffer, &data);
-		if (!ret)
+		if (!ret) {
 			USART2->DR = data;
-		else
+		} else {
 			USART2->CR1 &= ~USART_CR1_TXEIE;
+		}
 		USART2->SR &= ~USART_SR_TC;
 	}
 }
