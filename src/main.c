@@ -59,11 +59,11 @@ int main(void){
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
-//		sprintf(buffer, "%d/%d/%d\r\n", (int) day, (int) month, (int) year);
-//		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
-//		sprintf(buffer, "%d:%d:%d\r\n", (int) hour, (int) minute, (int) second);
-//		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
-//		UART_1_transmit();
+		sprintf(buffer, "%d/%d/%d\r\n", (int) day, (int) month, (int) year);
+		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
+		sprintf(buffer, "%d:%d:%d\r\n", (int) hour, (int) minute, (int) second);
+		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
+		UART_1_transmit();
 	}
 	return 0;
 }

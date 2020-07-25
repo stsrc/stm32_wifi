@@ -98,7 +98,7 @@ int8_t esp8266_CheckResetFlag();
  * -2 if send of command failed, -3 if wait for command result failed,
  *  -4 is send of data failed, 0 on success.
  */
-int8_t esp8266_WriteATCIPSEND(char *data, size_t data_size, uint8_t id);
+int8_t esp8266_WriteATCIPSEND_with_id(char *data, size_t data_size, uint8_t id);
 
 /**
  * @brief AT+CIPCLOSE command transfer, used to close channel.
@@ -110,7 +110,7 @@ int8_t esp8266_WriteATCIPSEND(char *data, size_t data_size, uint8_t id);
  * @retval int8_t -1 if send of AT+CIPCLOSE failed, -2 if waiting for command result
  * failed, 0 on success.
  */
-int8_t esp8266_WriteATCIPCLOSE(char *buf, uint8_t id);
+int8_t esp8266_WriteATCIPCLOSE_with_id(char *buf, uint8_t id);
 
 /**
  * @brief Function which waits for acknowledge to specific command.
@@ -125,8 +125,8 @@ int8_t esp8266_WriteATCIPCLOSE(char *buf, uint8_t id);
  * if command ended wich ERROR, -EINVAL if there was no such command,
  * -EBUSY if there is i.e. half of command and nothing more.
  */
-int8_t esp8266_WaitForAck(const uint8_t id, const char *command,
-			  unsigned int delay, uint8_t multiplier);
+int8_t esp8266_WaitForAck(const char *command, unsigned int delay,
+			  uint8_t multiplier);
 
 /**
  * @brief Function to clear reset flag after Wi-Fi reset.
