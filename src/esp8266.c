@@ -352,8 +352,8 @@ static inline void ParseDate(uint8_t *day, uint8_t *month, uint16_t *year,
 		*month = 0;
 }
 
-int8_t esp8266_start_connection(const char *udp_tcp, const char *address,
-				const char *port)
+int8_t esp8266_WriteATCIPSTART(const char *udp_tcp, const char *address,
+			       const char *port)
 {
 	char buf[BUF_MEM_SIZE];
 	int8_t ret = 0;
@@ -465,25 +465,18 @@ int8_t esp8266_WriteATCIPCLOSE()
 int8_t esp8266_GetDate(uint8_t *day, uint8_t *month, uint16_t *year,
 		       uint8_t *hour, uint8_t *minute, uint8_t *second)
 {
-	//char *http_disconnect = "AT+CIPCLOSE\r\n\0";
-	//char *http_command = "AT+CIPSEND=19\r\n\0";
 	char *http_data = "HEAD / HTTP/1.1\r\n\r\n\0";
 	int8_t ret = 0;
 	char buf[BUF_MEM_SIZE];
 	memset(buf, 0, BUF_MEM_SIZE);
 
-	ret = esp8266_start_connection("TCP", "www.google.com", "80");
+	ret = esp8266_WriteATCIPSTART("TCP", "www.google.com", "80");
 	if (ret)
 		return -1;
 
 	ret = esp8266_WriteATCIPSEND(http_data, strlen(http_data));
 	if (ret)
 		return -2;
-//	esp8266_Send(http_command, strlen(http_command));
-//	ret = esp8266_WaitForOk(http_command, 100, 100);
-//	if (ret)
-//		return -2;
-//	esp8266_Send(http_data, strlen(http_data));
 	delay_ms(2000);
 	ret = esp8266_WriteATCIPCLOSE();
 	if (ret)
@@ -494,10 +487,6 @@ int8_t esp8266_GetDate(uint8_t *day, uint8_t *month, uint16_t *year,
 		return -4;
 	ParseDate(day, month, year, hour, minute, second, buf);
 	buffer_Reset(&UART2_receive_buffer);
-//	esp8266_Send(http_disconnect, strlen(http_disconnect));
-//	ret = esp8266_WaitForOk(http_disconnect, 100, 100);
-//	if (ret)
-//		return -4;
 	return 0;
 }
 

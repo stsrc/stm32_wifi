@@ -85,6 +85,8 @@ int8_t esp8266_ScanForFile(char *file, uint8_t *id);
  */
 int8_t esp8266_CheckResetFlag();
 
+int8_t esp8266_WriteATCIPSTART(const char *udp_tcp, const char *address, const char *port);
+
 /**
  * @brief AT+CIPSEND command transfer, used to send data.
  *
@@ -100,17 +102,17 @@ int8_t esp8266_CheckResetFlag();
  */
 int8_t esp8266_WriteATCIPSEND_with_id(char *data, size_t data_size, uint8_t id);
 
+int8_t esp8266_WriteATCIPSEND(char *data, size_t data_size);
+
 /**
  * @brief AT+CIPCLOSE command transfer, used to close channel.
  *
  * Used to close a channel.
  *
- * @param buf temporary buffer, of size which equals to BUF_MEM_SIZE
- * @param id id of channel to be closed.
  * @retval int8_t -1 if send of AT+CIPCLOSE failed, -2 if waiting for command result
  * failed, 0 on success.
  */
-int8_t esp8266_WriteATCIPCLOSE_with_id(char *buf, uint8_t id);
+int8_t esp8266_WriteATCIPCLOSE();
 
 /**
  * @brief Function which waits for acknowledge to specific command.
