@@ -23,6 +23,7 @@
  * @{
  */
 
+HAL_StatusTypeDef UART_1_init();
 HAL_StatusTypeDef UART_2_init();
 
 /**
@@ -33,6 +34,8 @@ HAL_StatusTypeDef UART_2_init();
  */
 void UART_2_transmit();
 
+void UART_1_transmit();
+
 /**
  * @brief sets new speed of UART
  */
@@ -40,8 +43,7 @@ void UART_2_ChangeSpeed(unsigned int speed);
 
 extern struct simple_buffer UART2_transmit_buffer;
 extern struct simple_buffer UART2_receive_buffer;
-
-#define ready_bit 1 << 0
-#define error_bit 1 << 1
+extern struct simple_buffer UART1_transmit_buffer;
+extern struct simple_buffer UART1_receive_buffer;
 
 #endif

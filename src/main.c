@@ -46,15 +46,18 @@ int main(void){
 	configure_clock();
 	init_blue_led();
 	delay_init();
-	UART_2_init();
+	UART_1_init();
+/*	esp8266_Init();
+	uint8_t day, month, year, hour, minute, second;
+	esp8266_GetDate(&day, &month, &year, &hour, &minute, &second);*/
 	while(1){
 		GPIO_setBit(LED_port, LED_Blue);
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
 		const char *testString = "TEST STRING\r\n\0";
-		buffer_set_text(&UART2_transmit_buffer, testString, strlen(testString));
-		UART_2_transmit();
+		buffer_set_text(&UART1_transmit_buffer, testString, strlen(testString));
+		UART_1_transmit();
 	}
 	return 0;
 }
