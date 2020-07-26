@@ -114,6 +114,7 @@ int8_t esp8266_WriteATCIPSEND(char *data, size_t data_size);
  */
 int8_t esp8266_WriteATCIPCLOSE();
 
+int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *data);
 /**
  * @brief Function which waits for acknowledge to specific command.
  *

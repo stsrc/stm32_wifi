@@ -53,17 +53,12 @@ int main(void){
 	esp8266_Init();
 	uint16_t year;
 	uint8_t day, month, hour, minute, second;
-	esp8266_GetDate(&day, &month, &year, &hour, &minute, &second);
 	while(1){
 		GPIO_setBit(LED_port, LED_Blue);
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
-		sprintf(buffer, "%d/%d/%d\r\n", (int) day, (int) month, (int) year);
-		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
-		sprintf(buffer, "%d:%d:%d\r\n", (int) hour, (int) minute, (int) second);
-		buffer_set_text(&UART1_transmit_buffer, buffer, strlen(buffer));
-		UART_1_transmit();
+		esp8266_SendUDPPacket("192.168.1.1", "8181", "test");
 	}
 	return 0;
 }
