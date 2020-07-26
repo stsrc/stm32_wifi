@@ -4,3 +4,4 @@
 *cscope*
 src/secret-password.h
 *.swp
+src-server/main
