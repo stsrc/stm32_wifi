@@ -70,10 +70,6 @@ int8_t esp8266_ScanForFile(char *file, uint8_t *id)
 {
 	do_it = 1;
 	if (flag_tmp) {
-	/*
-		TM_ILI9341_DrawFilledRectangle(10, 90, 239, 120, ILI9341_COLOR_BLACK);
-		TM_ILI9341_Puts(10, 100, buf_tmp, &TM_Font_7x10, ILI9341_COLOR_BLACK, ILI9341_COLOR_WHITE);
-	*/
 		flag_tmp = 0;
 	}
 	for (size_t i = 0; i < 5; i++) {
@@ -725,7 +721,7 @@ int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *
 		return -2;
 	}
 
-	delay_ms(2000);
+	delay_ms(200);
 end:
 	ret = esp8266_WriteATCIPCLOSE();
 	if (ret) {

@@ -12,7 +12,7 @@ int gps_get_data(char *data, size_t data_size) {
 
 	do {
 		ret = buffer_SearchGetLabel(&UART1_receive_buffer, "$GP",
-					    "\r\n\0", data); //TODO data size problems
+					    "$GP", data); //TODO data size problems
 		if (ret)
 			delay_ms(delay);
 	} while (((ret == -EBUSY) || (ret == -EINVAL)) && (++cnt < multiplier));
