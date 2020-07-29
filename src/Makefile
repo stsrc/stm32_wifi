@@ -7,7 +7,7 @@ ASFLAGS = -g3
 
 # object files
 
-OBJS= stupid_delay.o  main.o UART.o esp8266.o simple_buffer.o $(STARTUP) $(HAL_COMPILE)
+OBJS= stupid_delay.o  main.o UART.o esp8266.o simple_buffer.o GPS.o $(STARTUP) $(HAL_COMPILE)
 
 # include common make file
 

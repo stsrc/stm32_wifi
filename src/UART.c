@@ -76,7 +76,7 @@ HAL_StatusTypeDef UART_1_init()
 {
 	HAL_StatusTypeDef ret;
 	UART_InitTypeDef init;
-	init.BaudRate = 115200;
+	init.BaudRate = 9600;
 	init.WordLength = UART_WORDLENGTH_8B;
 	init.StopBits = UART_STOPBITS_1;
 	init.Parity = UART_PARITY_NONE;

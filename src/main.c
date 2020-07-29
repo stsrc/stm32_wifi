@@ -5,7 +5,7 @@
 #include "UART.h"
 #include "simple_buffer.h"
 #include <stdio.h>
-
+#include "GPS.h"
 #define LED_port GPIOC
 #define LED_Blue (1 << 8)
 #define GPIO_setBit(PORT, PIN) (PORT->BSRR |= PIN)
@@ -44,21 +44,24 @@ static void configure_clock() {
 extern struct simple_buffer UART2_transmit_buffer;
 
 int main(void){
-	char buffer[128];
 	configure_clock();
 	init_blue_led();
 	delay_init();
 	UART_1_init();
 	UART_2_init();
 	esp8266_Init();
-	uint16_t year;
-	uint8_t day, month, hour, minute, second;
 	while(1){
 		GPIO_setBit(LED_port, LED_Blue);
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
-		esp8266_SendUDPPacket("192.168.1.1", "8181", "test");
+		uint8_t data[128];
+		data[127] = '\0';
+		int ret = gps_get_data(data, sizeof(data));
+		if (ret == 0)
+			esp8266_SendUDPPacket("192.168.1.1", "8181", data);
+		else
+			esp8266_SendUDPPacket("192.168.1.1", "8181", "fail");
 	}
 	return 0;
 }
