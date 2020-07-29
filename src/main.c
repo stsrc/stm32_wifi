@@ -51,18 +51,17 @@ int main(void){
 	UART_2_init();
 	esp8266_Init();
 	while(1){
+		/*
 		GPIO_setBit(LED_port, LED_Blue);
 		delay_ms(200);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(200);
+		*/
 		char data[512];
 		data[511] = '\0';
 		int ret = gps_get_data(data, sizeof(data));
 		if (ret == 0)
 			esp8266_SendUDPPacket("192.168.1.1", "8181", data);
-		else
-		sprintf(data, "error: %d", ret);
-		esp8266_SendUDPPacket("192.168.1.1", "8181", data);
 	}
 	return 0;
 }

@@ -90,7 +90,7 @@ int8_t esp8266_GetReply(const char *command, const char *delimiter,
 	uint16_t cnt = 0;
 	do {
 		ret = buffer_SearchGetLabel(&UART2_receive_buffer, command,
-					    delimiter, output);
+					    delimiter, output, 1);
 		if (ret)
 			delay_ms(delay);
 	} while (((ret == -EBUSY) || (ret == -EINVAL)) && (++cnt < multiplier));
@@ -277,10 +277,10 @@ int8_t esp8266_Init()
 	delay_ms(15000);
 	esp8266_Send(RST_CMD, strlen(RST_CMD));
 	delay_ms(15000);
-	esp8266_Send(AT_GMR, strlen(AT_GMR));
+/*	esp8266_Send(AT_GMR, strlen(AT_GMR));
 	delay_ms(5000);
 	esp8266_Send(AT_CWLAP, strlen(AT_CWLAP));
-	delay_ms(5000);
+	delay_ms(5000);*/
 	buffer_Reset(&UART2_receive_buffer);
 	ret = esp8266_ConnectToWiFi();
 	if (ret)
@@ -478,7 +478,7 @@ int8_t esp8266_GetDate(uint8_t *day, uint8_t *month, uint16_t *year,
 	if (ret)
 		return -3;
 
-	ret = buffer_SearchGetLabel(&UART2_receive_buffer, "Date: \0", " GMT\0", buf);
+	ret = buffer_SearchGetLabel(&UART2_receive_buffer, "Date: \0", " GMT\0", buf, 1);
 	if (ret)
 		return -4;
 	ParseDate(day, month, year, hour, minute, second, buf);
@@ -718,7 +718,7 @@ int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *
 
 	ret = esp8266_WriteATCIPSEND((char *)data, strlen(data));
 	if (ret) {
-		return -2;
+		goto end;
 	}
 
 	delay_ms(200);

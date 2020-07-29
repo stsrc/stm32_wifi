@@ -59,7 +59,7 @@ int8_t buffer_get_byte(struct simple_buffer* buf, uint8_t *byte);
  * @brief set byte to buffer.
  * @retval int8_t 0 on succes. -ENOMEM if there is no space.
  */
-int8_t buffer_set_byte(struct simple_buffer* buf, uint8_t byte);	
+int8_t buffer_set_byte(struct simple_buffer* buf, uint8_t byte);
 
 /**
  * @brief set data to buffer.
@@ -67,7 +67,7 @@ int8_t buffer_set_byte(struct simple_buffer* buf, uint8_t byte);
  * @param data_size data_size.
  * @retval int8_t 0 if success, -ENOMEM if there is no space.
  */
-int8_t buffer_set_text(struct simple_buffer *buf, const char *text, 
+int8_t buffer_set_text(struct simple_buffer *buf, const char *text,
 		       size_t data_size);
 
 /**
@@ -76,10 +76,10 @@ int8_t buffer_set_text(struct simple_buffer *buf, const char *text,
  * @param label text to search and from which start coping.
  * @param limiter text that ends coping.
  * @param output buffer in which text is placed.
- * @retval 0 on success, negative error otherwise. 
- */ 
-int8_t buffer_SearchGetLabel(struct simple_buffer *buf, const char *label, 
-			     const char *limiter, char *output);
+ * @retval 0 on success, negative error otherwise.
+ */
+int8_t buffer_SearchGetLabel(struct simple_buffer *buf, const char *label,
+			     const char *limiter, char *output, int8_t ignore_rn);
 
 /**
  * @brief function checks wether buffer is full.
