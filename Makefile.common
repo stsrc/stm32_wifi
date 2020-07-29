@@ -41,7 +41,7 @@ LDFLAGS+= -T$(LDSCRIPT) -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
 LDFLAGS+= -specs=nosys.specs
 LDFLAGS+= -Wall -Wl,-gc-sections,-u,main
 CFLAGS+= -mcpu=cortex-m3 -mthumb -mfloat-abi=soft
-CFLAGS+= -Os -g3 -Wall -std=gnu99
+CFLAGS+= -Wall -std=gnu99
 CFLAGS+= -fdata-sections
 CFLAGS+= -I$(CORE) -I$(INCLUDE) -I$(INCLUDE_CORE) -I$(HAL) -I.
 CFLAGS+= -D$(PTYPE) -D$(DEVICE)
