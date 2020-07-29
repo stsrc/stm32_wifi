@@ -55,13 +55,14 @@ int main(void){
 		delay_ms(1000);
 		GPIO_clearBit(LED_port, LED_Blue);
 		delay_ms(1000);
-		uint8_t data[128];
-		data[127] = '\0';
+		char data[512];
+		data[511] = '\0';
 		int ret = gps_get_data(data, sizeof(data));
 		if (ret == 0)
 			esp8266_SendUDPPacket("192.168.1.1", "8181", data);
 		else
-			esp8266_SendUDPPacket("192.168.1.1", "8181", "fail");
+		sprintf(data, "error: %d", ret);
+		esp8266_SendUDPPacket("192.168.1.1", "8181", data);
 	}
 	return 0;
 }

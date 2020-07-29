@@ -711,20 +711,26 @@ void esp8266_Update()
 
 int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *data)
 {
+	size_t dataSize = strlen(data);
+	if (!dataSize)
+		return 0;
+
 	int ret = esp8266_WriteATCIPSTART("UDP", address, port);
 	if (ret) {
-		return -1;
+		goto end;
 	}
 
 	ret = esp8266_WriteATCIPSEND((char *)data, strlen(data));
 	if (ret) {
 		return -2;
 	}
+
 	delay_ms(2000);
+end:
 	ret = esp8266_WriteATCIPCLOSE();
 	if (ret) {
 		return -3;
 	}
 
-	return 0;
+	return ret;
 }
