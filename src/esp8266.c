@@ -721,7 +721,7 @@ int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *
 		goto end;
 	}
 
-	delay_ms(200);
+	delay_ms(50);
 end:
 	ret = esp8266_WriteATCIPCLOSE();
 	if (ret) {
