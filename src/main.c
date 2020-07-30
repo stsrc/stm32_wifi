@@ -18,7 +18,7 @@ static void init_blue_led() {
 }
 
 static void configure_clock() {
-/*	RCC->CR |= (1 << 16); //External high speed clock enabled;
+	RCC->CR |= (1 << 16); //External high speed clock enabled;
 	while(!(RCC->CR & (1 << 17))); //External high-speed clock ready flag check
 
 	RCC->CFGR |= 1 << 17; //LSB of division factor PREDIV1
@@ -37,8 +37,8 @@ static void configure_clock() {
 	RCC->CFGR &= ~0b11; //select PLL as input
 	RCC->CFGR |= (0b10);
 	while(!(RCC->CFGR & 0b1000)); //wait until PLL is selected
-*/
-	SystemCoreClock = 8000000;
+
+	SystemCoreClock = 24000000;
 }
 
 extern struct simple_buffer UART2_transmit_buffer;
