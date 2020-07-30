@@ -436,6 +436,10 @@ int8_t esp8266_WriteATCIPSEND(char *data, size_t data_size)
 	if (ret)
 		return -3;
 
+	ret = esp8266_WaitForAck(">", 100, 10);
+	if (ret)
+		return -4;
+
 	return 0;
 }
 
@@ -721,7 +725,6 @@ int8_t esp8266_SendUDPPacket(const char *address, const char *port, const char *
 		goto end;
 	}
 
-	delay_ms(50);
 end:
 	ret = esp8266_WriteATCIPCLOSE();
 	if (ret) {
