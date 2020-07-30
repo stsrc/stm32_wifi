@@ -31,12 +31,6 @@ int8_t buffer_get_byte(struct simple_buffer* buf, uint8_t *byte)
 	return 0;
 }
 
-static inline uint8_t buffer_CheckLockFlag(struct simple_buffer *buf)
-{
-	return buf->lock & 1;
-}
-
-
 static inline int8_t buffer_PushBuf(struct simple_buffer *buf, uint8_t byte)
 {
 	size_t temp;
@@ -50,65 +44,12 @@ static inline int8_t buffer_PushBuf(struct simple_buffer *buf, uint8_t byte)
 	return 0;
 }
 
-/*RVO??*/
-static inline int8_t buffer_ClearTempBuf(struct simple_buffer *buf)
-{
-	size_t cnt = buf->lock >> 1;
-	int8_t ret = 0;
-	for (size_t i = 0; i < cnt; i++) {
-		ret = buffer_PushBuf(buf, buf->temp[i]);
-		if (ret)
-			break;
-	}
-	buf->lock = 0;
-	memset(buf->temp, 0, TEMP_MEM_SIZE);
-	return ret;
-}
-
-static inline int8_t buffer_PushTempBuf(struct simple_buffer *buf,
-					uint8_t byte)
-{
-	uint8_t head;
-	head = buf->lock >> 1;
-	if (head == TEMP_MEM_SIZE)
-		return -ENOMEM;
-	buf->temp[head++] = byte;
-	buf->lock = (head << 1) | 1;
-	return 0;
-}
-
-static inline void buffer_SetLock(struct simple_buffer *buf)
-{
-	buf->lock |= 1;
-}
-
-static inline void buffer_ClearLock(struct simple_buffer *buf)
-{
-	buf->lock &= ~1;
-}
-
-static inline int8_t buffer_IsLocked(struct simple_buffer *buf)
-{
-	return buf->lock & 1;
-}
-
-
 int8_t buffer_set_byte(struct simple_buffer* buf, uint8_t byte)
 {
 	int8_t ret = 0;
-	if (buf->ignore) {
-		buf->ignore--;
-		return 0;
-	} else if (buffer_CheckLockFlag(buf)) {
-		ret = buffer_PushTempBuf(buf, byte);
-		return ret;
-	} else {
-		ret = buffer_ClearTempBuf(buf);
-		if (ret)
-			return ret;
-		ret = buffer_PushBuf(buf, byte);
-		return ret;
-	}
+
+	ret = buffer_PushBuf(buf, byte);
+	return ret;
 }
 
 /*ret equals to what if not = 0?*/
@@ -210,13 +151,9 @@ int8_t buffer_SearchGetLabel(struct simple_buffer *buf, const char *label,
 {
 	int8_t ret;
 	size_t tail_old;
-	if (buffer_IsLocked(buf))
-		return -EBUSY;
-	buffer_SetLock(buf);
 	tail_old = buf->tail;
 	ret = buffer_MoveTailToLabel(buf, label, ignore_rn);
 	if (ret) {
-		buffer_ClearLock(buf);
 		return ret;
 	}
 	if (output)
@@ -226,16 +163,10 @@ int8_t buffer_SearchGetLabel(struct simple_buffer *buf, const char *label,
 
 	if (ret)
 		buf->tail = tail_old;
-	buffer_ClearLock(buf);
 	return ret;
 }
 
 void buffer_Reset(struct simple_buffer *buf)
 {
 	memset(buf, 0, sizeof(struct simple_buffer));
-}
-
-inline void buffer_SetIgnore(struct simple_buffer *buf, size_t ignore)
-{
-	buf->ignore = ignore;
 }

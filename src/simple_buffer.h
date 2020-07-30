@@ -9,7 +9,6 @@
  * @brief macros to set size of buffers at compile time
  */
 #define BUF_MEM_SIZE 512
-#define TEMP_MEM_SIZE 32
 
 /**
  * @addtogroup RFID_System libraries
@@ -37,11 +36,9 @@
  */
 struct simple_buffer{
 	volatile uint8_t lock;
-	char temp[TEMP_MEM_SIZE];
 	char memory[BUF_MEM_SIZE];
 	size_t head;
 	size_t tail;
-	size_t ignore;
 };
 
 /**

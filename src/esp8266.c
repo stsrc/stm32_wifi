@@ -610,13 +610,6 @@ static int8_t esp8266_state1(char *buf, const size_t buf_len,
 	if (len >= lentmp)
 		len -= lentmp;
 
-	buffer_SetIgnore(&UART2_receive_buffer, len);
-
-
-//	memset(buf_tmp, 0, 100);
-//	sprintf(buf_tmp, "id = %hu, len = %hu, strlen(buf + 2) = %u, file = %s, test = %u"
-//		, id, len, strlen(buf + 2), file, strlen("test\0test"));
-//	flag_tmp = 1;
 	memset(buf, 0, buf_len);
 
 
